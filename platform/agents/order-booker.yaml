@@ -34,6 +34,7 @@ spec:
         4. call_tool x_dealer-mailbox_set_email_status to booked with the SAP order
            number as note. For ASK DEALER or STOP: status returned_to_dealer with the
            question as note, and no SAP order.
+        Write in English unless the dealer is in Germany or Austria, then in German.
         Prices come from SAP, never from the form. Call tools by these exact names
         through call_tool; do not use filter_tools or describe_tool, you know the tools.
         Every call_tool of yours waits for a person's approval; that person reads your

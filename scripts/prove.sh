@@ -46,9 +46,11 @@ try:
 except Exception as e: print("BAD parse: %s" % e)')
 [[ "$wf" == OK* ]] && ok "workflow run: $wf, BP-COMBI-10G resolved to BP-COMBI-10-G" || bad "workflow run: $wf $(printf '%s' "$r" | head -c 200)"
 r=$(call x_sap-erp_create_sales_order '{"dealer_no":"D-10211","items":[{"article_no":"BS-1042","qty":1}],"requested_delivery_week":"2026-W48"}')
-echo "$r" | grep -q 'outside the toolset' && ok "read-only toolset refuses create_sales_order (muster, no model)" || bad "write was not refused: $(echo "$r" | head -c 300)"
-r=$(call x_sap-erp_list_sales_orders '{}')
-echo "$r" | grep -q '"count' && ok "SAP mock answers (list_sales_orders)" || bad "SAP mock: $(echo "$r" | head -c 200)"
+echo "$r" | grep -q 'outside the toolset' && ok "checker's toolset refuses create_sales_order (muster, no model)" || bad "write was not refused: $(echo "$r" | head -c 300)"
+r=$(call x_kubernetes_list '{"management_cluster":"agentlab","resourceType":"namespaces"}')
+echo "$r" | grep -q 'outside the toolset' && ok "checker's toolset refuses Kubernetes reads too" || bad "kubernetes read was not refused: $(echo "$r" | head -c 200)"
+r=$(call x_dealer-mailbox_list_order_emails '{"status":"all"}')
+echo "$r" | grep -q '"count' && ok "inbox answers inside the toolset (list_order_emails)" || bad "inbox: $(echo "$r" | head -c 200)"
 
 # 4. the portal
 code=$(curl -sk -o /dev/null -w '%{http_code}' https://backstage.127.0.0.1.nip.io/)
