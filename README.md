@@ -20,19 +20,50 @@ All customer systems and data are **mocks with synthetic data**.
 
 ## How it fits together
 
+```mermaid
+flowchart LR
+  subgraph BKS["Bergmann systems (mocks, synthetic data)"]
+    direction TB
+    MB["Dealer order inbox<br/>PDF forms, already OCR'd"]
+    SAP["SAP S/4HANA<br/>dealers, prices, sales orders"]
+    MES["MES planning<br/>line capacity per week"]
+  end
+
+  subgraph GSP["Giant Swarm Agent Platform (agentlab, kind cluster)"]
+    direction LR
+    subgraph MCPS["MCP servers, namespace bergmann"]
+      direction TB
+      M1["dealer-mailbox<br/>3 tools"]
+      M2["sap-erp<br/>10 tools"]
+      M3["mes-planning<br/>2 tools"]
+    end
+    MU{{"muster<br/>MCP gateway<br/>identity per person, toolsets, audit"}}
+    WF[["workflow<br/>validate-dealer-order<br/>form, dealer, then per position:<br/>article, price, MES slot"]]
+    subgraph RT["kagent on Agent Substrate (sandbox, egress gate)"]
+      direction TB
+      CK["order-checker<br/>preset:read-only + workflow"]
+      BK["order-booker<br/>sap-erp, dealer-mailbox, workflow<br/>requireApproval"]
+    end
+    SK[("skill dealer-order-intake<br/>git, pinned to a commit")]
+    LLM["model<br/>Sonnet 5.5 via OpenRouter<br/>at Bergmann: a local model"]
+  end
+
+  P(["Back office<br/>Backstage portal"])
+
+  MB --- M1
+  SAP --- M2
+  MES --- M3
+  M1 & M2 & M3 --> MU
+  MU --> WF
+  CK -- "call_tool" --> MU
+  BK -- "call_tool, each call approved" --> MU
+  SK -.-> CK & BK
+  CK & BK -.-> LLM
+  P -- "chat, Allow / Decline" --> BK
+  P -- "morning reports" --> CK
 ```
-dealer emails (PDF, OCR'd) ─┐
-SAP S/4HANA (mock)          ├─ MCP servers ──► muster (MCP gateway, per-person identity, toolsets)
-MES planning (mock)         ─┘                    │
-                                                  ├─ workflow: validate-dealer-order (one call = whole evidence chain)
-                                                  │
-                      kagent runtime ──► order-checker  (toolset: preset:read-only + the workflow)
-                      (Agent Substrate)   order-booker   (toolset: workflow + sap-erp + dealer-mailbox, requireApproval)
-                                                  │
-                      skill: dealer-order-intake (git, pinned to a commit) ── the clerks' checklist as instructions
-                                                  │
-                      Backstage portal ── people chat with the agents, approve the booker's calls
-```
+
+Each agent is one HelmRelease of the Giant Swarm `agent` chart, delivered by Flux and admitted by Kyverno. Every tool call goes through muster as the signed-in person.
 
 | Layer | What | Where |
 |---|---|---|
