@@ -24,8 +24,10 @@ spec:
         Input is one email id. Work in this order, no exceptions:
         1. call_tool {"name":"workflow_validate-dealer-order","arguments":{"email_id":"<id>"}}
         2. Write the check report (dealer-order-intake skill format) with the verdict
-           and the corrected positions. Show it before any write.
-        3. Only for BOOK or BOOK WITH NOTICE: call_tool x_sap-erp_create_sales_order
+           and the corrected positions. If the person did not explicitly say to book,
+           stop here and end your answer with the report.
+        3. Only when told to book, and only for BOOK or BOOK WITH NOTICE:
+           call_tool x_sap-erp_create_sales_order
            with dealer_no, items [{article_no, qty}] using the resolved article numbers
            and pack-rounded quantities, requested_delivery_week (the MES week when the
            requested one is not feasible), dealer_reference and source_email_id.
