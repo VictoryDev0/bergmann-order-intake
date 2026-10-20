@@ -37,8 +37,14 @@ call() { curl -sk -m 120 "$M" "${hdr[@]}" -H "Mcp-Session-Id: $S" -H "X-Muster-T
   -d "{\"jsonrpc\":\"2.0\",\"id\":9,\"method\":\"tools/call\",\"params\":{\"name\":\"call_tool\",\"arguments\":{\"name\":\"$1\",\"arguments\":$2}}}" \
   | sed 's/^data: //' | grep '^{' | tail -1; }
 r=$(call workflow_validate-dealer-order '{"email_id":"E-2026-10-26-002"}')
-echo "$r" | grep -q completed && echo "$r" | grep -q 'BP-COMBI-10-G' \
-  && ok "workflow run: completed, BP-COMBI-10G resolved to BP-COMBI-10-G" || bad "workflow run: $(echo "$r" | head -c 300)"
+wf=$(printf '%s' "$r" | python3 -c 'import sys,json
+try:
+    d=json.load(sys.stdin); t=d["result"]["content"][0]["text"]; inner=json.loads(t); w=json.loads(inner["content"][0]["text"])
+    steps=w.get("steps",[]); ok=w.get("status")=="completed" and all(s.get("status")=="completed" for s in steps)
+    art=any("BP-COMBI-10-G" in json.dumps(s.get("result",{})) for s in steps if s.get("id")=="material")
+    print(("OK" if ok and art else "BAD")+" status=%s steps=%d" % (w.get("status"), len(steps)))
+except Exception as e: print("BAD parse: %s" % e)')
+[[ "$wf" == OK* ]] && ok "workflow run: $wf, BP-COMBI-10G resolved to BP-COMBI-10-G" || bad "workflow run: $wf $(printf '%s' "$r" | head -c 200)"
 r=$(call x_sap-erp_create_sales_order '{"dealer_no":"D-10211","items":[{"article_no":"BS-1042","qty":1}],"requested_delivery_week":"2026-W48"}')
 echo "$r" | grep -q 'outside the toolset' && ok "read-only toolset refuses create_sales_order (muster, no model)" || bad "write was not refused: $(echo "$r" | head -c 300)"
 r=$(call x_sap-erp_list_sales_orders '{}')

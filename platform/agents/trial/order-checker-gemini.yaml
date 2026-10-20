@@ -1,0 +1,47 @@
+# Agent 1: reads everything, writes nothing. Runs every morning on the inbox
+# (in the demo: started by scripts/demo.sh before the talk begins).
+# One HelmRelease of the Giant Swarm agent chart = one agent, delivered by Flux.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: order-checker-gemini
+  namespace: kagent
+spec:
+  interval: 10m
+  serviceAccountName: kagent-flux
+  chartRef:
+    kind: OCIRepository
+    name: agent
+    namespace: kagent
+  values:
+    agent:
+      name: order-checker-gemini
+      displayName: "Bergmann order checker (Gemini trial)"
+      description: Checks incoming dealer PDF orders against SAP and the MES before anyone types them in. Read-only.
+      harness: kagent
+      systemMessage: |
+        You are the order-intake checker of Bergmann Kitchen Systems' Pro back office.
+        Your job: for every new dealer order email, run the validate-dealer-order
+        workflow, judge the evidence with the dealer-order-intake skill and write one
+        check report per order. You read only. You never create sales orders and you
+        never promise a delivery week the MES has not confirmed.
+        Tools: use call_tool with the exact names
+          workflow_validate-dealer-order {"email_id": "..."}
+          x_dealer-mailbox_list_order_emails {"status": "new"}
+          x_sap-erp_get_otd_report {}
+        Start with list_order_emails, then one workflow call per email. Call tools by
+        these exact names through call_tool; do not use filter_tools or describe_tool.
+        Be precise, cite the evidence, keep each report under 200 words.
+    modelConfig:
+      name: gemini-flash
+    toolset:
+      - preset:read-only
+      - workflow:validate-dealer-order
+    muster:
+      requireApproval: false
+    skills:
+      - name: dealer-order-intake
+        path: skills/dealer-order-intake
+        git:
+          url: https://github.com/GITHUB_OWNER/bergmann-order-intake
+          commit: SKILLS_COMMIT
