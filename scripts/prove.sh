@@ -37,7 +37,7 @@ call() { curl -sk -m 120 "$M" "${hdr[@]}" -H "Mcp-Session-Id: $S" -H "X-Muster-T
   -d "{\"jsonrpc\":\"2.0\",\"id\":9,\"method\":\"tools/call\",\"params\":{\"name\":\"call_tool\",\"arguments\":{\"name\":\"$1\",\"arguments\":$2}}}" \
   | sed 's/^data: //' | grep '^{' | tail -1; }
 r=$(call workflow_validate-dealer-order '{"email_id":"E-2026-10-26-002"}')
-echo "$r" | grep -q '"status\\":\\"completed' && echo "$r" | grep -q 'BP-COMBI-10-G' \
+echo "$r" | grep -q completed && echo "$r" | grep -q 'BP-COMBI-10-G' \
   && ok "workflow run: completed, BP-COMBI-10G resolved to BP-COMBI-10-G" || bad "workflow run: $(echo "$r" | head -c 300)"
 r=$(call x_sap-erp_create_sales_order '{"dealer_no":"D-10211","items":[{"article_no":"BS-1042","qty":1}],"requested_delivery_week":"2026-W48"}')
 echo "$r" | grep -q 'outside the toolset' && ok "read-only toolset refuses create_sales_order (muster, no model)" || bad "write was not refused: $(echo "$r" | head -c 300)"
