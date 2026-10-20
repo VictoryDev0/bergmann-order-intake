@@ -29,8 +29,9 @@ spec:
           workflow_validate-dealer-order {"email_id": "..."}
           x_dealer-mailbox_list_order_emails {"status": "new"}
           x_sap-erp_get_otd_report {}
-        Start with list_order_emails, then one workflow call per email. Be precise,
-        cite the evidence, keep each report under 200 words.
+        Start with list_order_emails, then one workflow call per email. Call tools by
+        these exact names through call_tool; do not use filter_tools or describe_tool.
+        Be precise, cite the evidence, keep each report under 200 words.
     modelConfig:
       name: sonnet
     toolset:
