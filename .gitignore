@@ -5,3 +5,5 @@ certs/
 __pycache__/
 .DS_Store
 slides/*.pdf
+slides/TALK*.md
+slides/shots/
