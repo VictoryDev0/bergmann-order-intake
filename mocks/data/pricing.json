@@ -1,0 +1,7 @@
+{
+  "current_price_list": "PL-2026-PRO",
+  "valid_from": "2026-01-01",
+  "previous_price_list": "PL-2025-PRO",
+  "list_price_increase_2026": 0.04,
+  "discount_groups": {"A": 0.25, "B": 0.20, "C": 0.15}
+}

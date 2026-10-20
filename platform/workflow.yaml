@@ -1,0 +1,59 @@
+# One muster workflow = the deterministic part of the job. The agent calls it
+# once (workflow_validate-dealer-order) instead of a dozen single tool calls,
+# then does only the judgement: what is wrong, what to propose, what to ask.
+apiVersion: muster.giantswarm.io/v1alpha1
+kind: Workflow
+metadata:
+  name: validate-dealer-order
+  namespace: agent-platform
+spec:
+  description: >-
+    Check one dealer order email against SAP and the MES: resolve the dealer,
+    resolve every article, fetch the dealer's current price and pack size, and
+    ask the MES for the earliest production slot against the requested week.
+    Reads only. The result is the raw evidence for the order-intake agent.
+  args:
+    email_id:
+      type: string
+      required: true
+      description: The email id from list_order_emails (e.g. E-2026-10-26-002).
+  steps:
+    - id: form
+      description: The order form as OCR read it.
+      tool: x_dealer-mailbox_get_order_form
+      output: true
+      args:
+        email_id: "{{ .input.email_id }}"
+    - id: dealer
+      description: Dealer by number, then by name; mismatch when they differ.
+      tool: x_sap-erp_find_dealer
+      output: true
+      args:
+        name: "{{ .results.form.dealer_name }}"
+        dealer_no: "{{ .results.form.dealer_no }}"
+    - id: positions
+      forEach:
+        items: "{{ .results.form.items }}"
+        as: pos
+        steps:
+          - id: material
+            description: Article as written, resolved against the material master.
+            tool: x_sap-erp_find_material
+            output: true
+            args:
+              query: "{{ .vars.pos.article_no }}"
+          - id: price
+            description: Current net price for this dealer and article.
+            tool: x_sap-erp_get_dealer_price
+            output: true
+            args:
+              dealer_no: "{{ with .results.dealer.match }}{{ .dealer_no }}{{ else }}UNKNOWN{{ end }}"
+              article_no: "{{ with .results.material.match }}{{ .article_no }}{{ else }}UNKNOWN{{ end }}"
+          - id: slot
+            description: Earliest production slot from the MES against the requested week.
+            tool: x_mes-planning_earliest_slot
+            output: true
+            args:
+              article_no: "{{ with .results.material.match }}{{ .article_no }}{{ else }}UNKNOWN{{ end }}"
+              qty: "{{ .vars.pos.qty }}"
+              requested_week: "{{ .results.form.requested_delivery_week }}"

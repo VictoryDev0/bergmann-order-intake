@@ -1,0 +1,42 @@
+# The three customer systems, registered with muster. Tools appear as
+# x_<name>_<tool>, e.g. x_sap-erp_find_dealer. No auth block: muster holds one
+# shared connection to each mock. At Bergmann each entry would carry
+# auth.forwardToken so SAP sees the person, not the platform.
+apiVersion: muster.giantswarm.io/v1alpha1
+kind: MCPServer
+metadata:
+  name: dealer-mailbox
+  namespace: agent-platform
+  annotations:
+    ui.giantswarm.io/display-name: "Dealer order inbox (bestellung@)"
+spec:
+  type: streamable-http
+  url: http://mailbox-mock.bergmann.svc.cluster.local:8000/mcp
+  description: Shared mailbox for dealer PDF order forms, already OCR'd (mock)
+  timeout: 60
+---
+apiVersion: muster.giantswarm.io/v1alpha1
+kind: MCPServer
+metadata:
+  name: sap-erp
+  namespace: agent-platform
+  annotations:
+    ui.giantswarm.io/display-name: "SAP S/4HANA (SD/MM)"
+spec:
+  type: streamable-http
+  url: http://sap-mock.bergmann.svc.cluster.local:8000/mcp
+  description: Dealers, materials, dealer prices, sales orders and the on-time-delivery spreadsheet (mock)
+  timeout: 60
+---
+apiVersion: muster.giantswarm.io/v1alpha1
+kind: MCPServer
+metadata:
+  name: mes-planning
+  namespace: agent-platform
+  annotations:
+    ui.giantswarm.io/display-name: "MES production planning"
+spec:
+  type: streamable-http
+  url: http://mes-mock.bergmann.svc.cluster.local:8000/mcp
+  description: Legacy MES, weekly plan per line, earliest production slot (mock)
+  timeout: 60

@@ -1,0 +1,7 @@
+.env
+*.token
+state/
+certs/
+__pycache__/
+.DS_Store
+slides/*.pdf

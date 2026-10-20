@@ -1,0 +1,12 @@
+[
+  {"dealer_no": "D-10211", "name": "Küchenprofi Hamburg GmbH", "country": "DE", "city": "Hamburg", "discount_group": "A", "edi": false, "payment_terms": "30 days net", "credit_block": false},
+  {"dealer_no": "D-10324", "name": "Horeca Supplies BV", "country": "NL", "city": "Rotterdam", "discount_group": "B", "edi": false, "payment_terms": "30 days net", "credit_block": false},
+  {"dealer_no": "D-10342", "name": "Hotelbedarf Rhein GmbH", "country": "DE", "city": "Köln", "discount_group": "B", "edi": false, "payment_terms": "14 days 2%, 30 days net", "credit_block": false},
+  {"dealer_no": "D-10458", "name": "Ristoratore Forniture Srl", "country": "IT", "city": "Bologna", "discount_group": "B", "edi": false, "payment_terms": "60 days net", "credit_block": false},
+  {"dealer_no": "D-10517", "name": "Gastro Nord AB", "country": "SE", "city": "Göteborg", "discount_group": "A", "edi": false, "payment_terms": "30 days net", "credit_block": false},
+  {"dealer_no": "D-10603", "name": "Cuisine Pro SARL", "country": "FR", "city": "Lyon", "discount_group": "C", "edi": false, "payment_terms": "30 days net", "credit_block": false},
+  {"dealer_no": "D-10688", "name": "Gastro Wien GmbH", "country": "AT", "city": "Wien", "discount_group": "A", "edi": true, "payment_terms": "30 days net", "credit_block": false},
+  {"dealer_no": "D-10720", "name": "Horeca Iberia SL", "country": "ES", "city": "Madrid", "discount_group": "C", "edi": false, "payment_terms": "30 days net", "credit_block": true},
+  {"dealer_no": "D-10791", "name": "Großküchentechnik Sachsen GmbH", "country": "DE", "city": "Dresden", "discount_group": "B", "edi": false, "payment_terms": "30 days net", "credit_block": false},
+  {"dealer_no": "D-10855", "name": "ProKitchen Nordic ApS", "country": "DK", "city": "Aarhus", "discount_group": "B", "edi": true, "payment_terms": "30 days net", "credit_block": false}
+]

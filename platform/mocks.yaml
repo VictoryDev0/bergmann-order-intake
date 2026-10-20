@@ -1,0 +1,85 @@
+# Three Deployments of the same image and file, SYSTEM picks the role.
+# The code and data come from a ConfigMap (scripts/deploy.sh creates it), so no
+# image build is needed; uv installs FastMCP at start (~30 s).
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bergmann
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: mailbox-mock, namespace: bergmann, labels: {app: mailbox-mock}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: mailbox-mock}}
+  template:
+    metadata: {labels: {app: mailbox-mock}}
+    spec:
+      containers:
+        - name: mcp
+          image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+          command: ["uv", "run", "--with", "fastmcp>=2.10,<3", "python", "/app/server.py"]
+          env: [{name: SYSTEM, value: mailbox}, {name: DATA_DIR, value: /app/data}, {name: UV_CACHE_DIR, value: /tmp/uv}]
+          ports: [{name: mcp, containerPort: 8000}]
+          resources: {requests: {cpu: 20m, memory: 96Mi}, limits: {memory: 256Mi}}
+          volumeMounts: [{name: code, mountPath: /app/server.py, subPath: server.py}, {name: data, mountPath: /app/data}]
+      volumes:
+        - {name: code, configMap: {name: bergmann-mock-code}}
+        - {name: data, configMap: {name: bergmann-mock-data}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: mailbox-mock, namespace: bergmann}
+spec: {selector: {app: mailbox-mock}, ports: [{name: mcp, port: 8000, targetPort: 8000}]}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: sap-mock, namespace: bergmann, labels: {app: sap-mock}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: sap-mock}}
+  template:
+    metadata: {labels: {app: sap-mock}}
+    spec:
+      containers:
+        - name: mcp
+          image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+          command: ["uv", "run", "--with", "fastmcp>=2.10,<3", "python", "/app/server.py"]
+          env: [{name: SYSTEM, value: sap}, {name: DATA_DIR, value: /app/data}, {name: UV_CACHE_DIR, value: /tmp/uv}]
+          ports: [{name: mcp, containerPort: 8000}]
+          resources: {requests: {cpu: 20m, memory: 96Mi}, limits: {memory: 256Mi}}
+          volumeMounts: [{name: code, mountPath: /app/server.py, subPath: server.py}, {name: data, mountPath: /app/data}]
+      volumes:
+        - {name: code, configMap: {name: bergmann-mock-code}}
+        - {name: data, configMap: {name: bergmann-mock-data}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: sap-mock, namespace: bergmann}
+spec: {selector: {app: sap-mock}, ports: [{name: mcp, port: 8000, targetPort: 8000}]}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: mes-mock, namespace: bergmann, labels: {app: mes-mock}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: mes-mock}}
+  template:
+    metadata: {labels: {app: mes-mock}}
+    spec:
+      containers:
+        - name: mcp
+          image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+          command: ["uv", "run", "--with", "fastmcp>=2.10,<3", "python", "/app/server.py"]
+          env: [{name: SYSTEM, value: mes}, {name: DATA_DIR, value: /app/data}, {name: UV_CACHE_DIR, value: /tmp/uv}]
+          ports: [{name: mcp, containerPort: 8000}]
+          resources: {requests: {cpu: 20m, memory: 96Mi}, limits: {memory: 256Mi}}
+          volumeMounts: [{name: code, mountPath: /app/server.py, subPath: server.py}, {name: data, mountPath: /app/data}]
+      volumes:
+        - {name: code, configMap: {name: bergmann-mock-code}}
+        - {name: data, configMap: {name: bergmann-mock-data}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: mes-mock, namespace: bergmann}
+spec: {selector: {app: mes-mock}, ports: [{name: mcp, port: 8000, targetPort: 8000}]}

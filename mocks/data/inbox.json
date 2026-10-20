@@ -1,0 +1,74 @@
+[
+  {
+    "email_id": "E-2026-10-26-001",
+    "received": "2026-10-26T07:12:00+01:00",
+    "from": "einkauf@kuechenprofi-hamburg.example",
+    "subject": "Bestellung KP-7731",
+    "attachment": "Bestellformular_KP-7731.pdf",
+    "form": {
+      "dealer_name": "Küchenprofi Hamburg GmbH",
+      "dealer_no": "D-10211",
+      "dealer_reference": "KP-7731",
+      "requested_delivery_week": "2026-W48",
+      "items": [
+        {"pos": 1, "article_no": "BP-COMBI-10-E", "description": "Kombidämpfer 10x GN 1/1 elektrisch", "qty": 2, "unit_price_as_written": 10425.00},
+        {"pos": 2, "article_no": "BS-1042", "description": "Türdichtung Kombidämpfer", "qty": 4, "unit_price_as_written": 66.75}
+      ],
+      "remarks": ""
+    }
+  },
+  {
+    "email_id": "E-2026-10-26-002",
+    "received": "2026-10-26T07:40:00+01:00",
+    "from": "ordini@ristoratore-forniture.example",
+    "subject": "Ordine n. RF-2026-418",
+    "attachment": "modulo_ordine_RF-2026-418.pdf",
+    "form": {
+      "dealer_name": "Ristoratore Forniture Srl",
+      "dealer_no": "D-10458",
+      "dealer_reference": "RF-2026-418",
+      "requested_delivery_week": "KW 47",
+      "items": [
+        {"pos": 1, "article_no": "BP-COMBI-10G", "description": "Forno combinato 10 GN gas", "qty": 1, "unit_price_as_written": 11461.54},
+        {"pos": 2, "article_no": "BS-2210", "description": "Ugelli gas metano serie 700", "qty": 12, "unit_price_as_written": 9.23}
+      ],
+      "remarks": "Prezzi come listino 2025 concordato"
+    }
+  },
+  {
+    "email_id": "E-2026-10-26-003",
+    "received": "2026-10-26T08:05:00+01:00",
+    "from": "order@gastronord.example",
+    "subject": "Order GN-5520 urgent, hotel opening",
+    "attachment": "order_form_GN-5520.pdf",
+    "form": {
+      "dealer_name": "Gastro Nord AB",
+      "dealer_no": "D-10517",
+      "dealer_reference": "GN-5520",
+      "requested_delivery_week": "2026-W46",
+      "items": [
+        {"pos": 1, "article_no": "BP-COMBI-6-E", "description": "Combi oven 6 GN electric", "qty": 6, "unit_price_as_written": 7425.00},
+        {"pos": 2, "article_no": "BP-IND-2-T", "description": "Induction hob 2 zones table top", "qty": 4, "unit_price_as_written": 2242.50}
+      ],
+      "remarks": "Hotel opening 20 November, delivery week 46 latest please"
+    }
+  },
+  {
+    "email_id": "E-2026-10-26-004",
+    "received": "2026-10-26T08:31:00+01:00",
+    "from": "inkoop@horeca-supplies.example",
+    "subject": "Bestelling HS-30917",
+    "attachment": "bestelformulier_HS-30917.pdf",
+    "form": {
+      "dealer_name": "Horeca Supplies BV",
+      "dealer_no": "D-10342",
+      "dealer_reference": "HS-30917",
+      "requested_delivery_week": "2026-W48",
+      "items": [
+        {"pos": 1, "article_no": "BP-RANGE-8-G", "description": "Gasfornuis 8 branders serie 700", "qty": 2, "unit_price_as_written": 5192.00},
+        {"pos": 2, "article_no": "BP-GRID-E", "description": "Grillplaat 800 elektrisch", "qty": 1, "unit_price_as_written": 2760.00}
+      ],
+      "remarks": ""
+    }
+  }
+]

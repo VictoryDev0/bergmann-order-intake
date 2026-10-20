@@ -1,0 +1,17 @@
+[
+  {"article_no": "BP-RANGE-4-G", "description": "Gasherd 4 Brenner, Serie 700", "family": "RANGE", "line": "1", "list_price": 4890.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-RANGE-6-G", "description": "Gasherd 6 Brenner, Serie 700", "family": "RANGE", "line": "1", "list_price": 6490.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-RANGE-4-E", "description": "Elektroherd 4 Kochplatten, Serie 700", "family": "RANGE", "line": "1", "list_price": 4290.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-COMBI-6-E", "description": "Kombidämpfer 6x GN 1/1, elektrisch", "family": "COMBI", "line": "2", "list_price": 9900.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-COMBI-10-E", "description": "Kombidämpfer 10x GN 1/1, elektrisch", "family": "COMBI", "line": "2", "list_price": 13900.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-COMBI-10-G", "description": "Kombidämpfer 10x GN 1/1, Gas", "family": "COMBI", "line": "2", "list_price": 14900.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-COMBI-20-E", "description": "Kombidämpfer 20x GN 1/1, elektrisch", "family": "COMBI", "line": "2", "list_price": 24500.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 4},
+  {"article_no": "BP-IND-2-T", "description": "Induktionskochfeld 2 Zonen, Tischgerät", "family": "IND", "line": "2", "list_price": 2990.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-IND-4-S", "description": "Induktionsherd 4 Zonen, Standgerät", "family": "IND", "line": "2", "list_price": 7900.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-GRID-E", "description": "Grillplatte 800 mm, elektrisch", "family": "GRID", "line": "1", "list_price": 3450.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BP-FRY-2-E", "description": "Fritteuse 2x 10 l, elektrisch", "family": "FRY", "line": "1", "list_price": 3890.0, "pack_size": 1, "stock": 0, "make_to_order": true, "lead_time_weeks": 3},
+  {"article_no": "BS-1042", "description": "Türdichtung Kombidämpfer 10 GN", "family": "SPARE", "line": "6", "list_price": 89.0, "pack_size": 1, "stock": 140, "make_to_order": false, "lead_time_weeks": 0},
+  {"article_no": "BS-2210", "description": "Brennerdüse Erdgas H, Serie 700 (VE 10 Stück)", "family": "SPARE", "line": "6", "list_price": 12.0, "pack_size": 10, "stock": 600, "make_to_order": false, "lead_time_weeks": 0},
+  {"article_no": "BS-3005", "description": "Steuerplatine Induktion IND-4", "family": "SPARE", "line": "6", "list_price": 640.0, "pack_size": 1, "stock": 7, "make_to_order": false, "lead_time_weeks": 0},
+  {"article_no": "BS-4120", "description": "Kerntemperaturfühler Kombidämpfer", "family": "SPARE", "line": "6", "list_price": 145.0, "pack_size": 1, "stock": 55, "make_to_order": false, "lead_time_weeks": 0}
+]

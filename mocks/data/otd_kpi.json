@@ -1,0 +1,21 @@
+{
+  "source": "Back office spreadsheet 'Liefertreue Pro 2026.xlsx', tab KW43 (synthetic)",
+  "period": "2026-W31 to 2026-W43 (13 weeks)",
+  "line": "Bergmann Pro",
+  "on_time_delivery_pct": 87.0,
+  "target_pct": 95.0,
+  "orders_per_week": {"total": 350, "edi": 190, "pdf_by_email": 160},
+  "pdf_orders": {
+    "typed_into_sap_by": "2 back-office clerks",
+    "minutes_per_order": 12,
+    "share_with_at_least_one_error_pct": 31,
+    "error_types_pct": {"wrong_or_nonexistent_article_no": 38, "outdated_price": 24, "quantity_not_pack_multiple": 14, "dealer_number_mismatch": 11, "requested_week_not_feasible": 13},
+    "avg_days_to_resolve_error": 2.3,
+    "note": "an error is usually found after the order is already in SAP, when production or invoicing stumbles over it"
+  },
+  "late_deliveries": {
+    "per_week": 46,
+    "causes_pct": {"order_entry_error": 41, "capacity_or_planning": 27, "supplier_parts": 18, "logistics": 14}
+  },
+  "cost_of_a_late_pro_delivery_eur": {"express_freight_avg": 380, "dealer_penalty_or_goodwill_avg": 900, "note": "dealer churn not quantified"}
+}

@@ -1,0 +1,46 @@
+# Agent 2: the one that writes. Same skill, same workflow, plus create_sales_order
+# and set_email_status, and every tool call pauses for a person's approval
+# (muster.requireApproval). The clerk approves in the portal; the agent books.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: order-booker
+  namespace: kagent
+spec:
+  interval: 10m
+  serviceAccountName: kagent-flux
+  chartRef:
+    kind: OCIRepository
+    name: agent
+    namespace: kagent
+  values:
+    agent:
+      name: order-booker
+      displayName: "Bergmann order booker"
+      description: Books a checked dealer order into SAP, each step approved by a person.
+      harness: kagent
+      systemMessage: |
+        You book dealer orders into SAP for Bergmann Kitchen Systems' Pro back office.
+        Input is one email id. Run workflow_validate-dealer-order first, judge it with
+        the dealer-order-intake skill, state the verdict and the corrected positions,
+        then and only then call x_sap-erp_create_sales_order with the resolved article
+        numbers, pack-rounded quantities and the requested week (or the MES week when
+        the requested one is not feasible), and x_dealer-mailbox_set_email_status to
+        booked with the SAP order number as note. Prices come from SAP, never from the
+        form. If the verdict is ASK DEALER or STOP, do not book: set the email to
+        returned_to_dealer with the question as note and say why.
+        Every tool call of yours waits for a person's approval. Keep explanations short.
+    modelConfig:
+      name: sonnet
+    toolset:
+      - workflow:validate-dealer-order
+      - server:sap-erp
+      - server:dealer-mailbox
+    muster:
+      requireApproval: true
+    skills:
+      - name: dealer-order-intake
+        path: skills/dealer-order-intake
+        git:
+          url: https://github.com/GITHUB_OWNER/bergmann-order-intake
+          commit: SKILLS_COMMIT
