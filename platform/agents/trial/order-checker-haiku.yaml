@@ -4,7 +4,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: order-checker-gemini
+  name: order-checker-haiku
   namespace: kagent
 spec:
   interval: 10m
@@ -15,8 +15,8 @@ spec:
     namespace: kagent
   values:
     agent:
-      name: order-checker-gemini
-      displayName: "Bergmann order checker (Gemini trial)"
+      name: order-checker-haiku
+      displayName: "Bergmann order checker (Haiku trial)"
       description: Checks incoming dealer PDF orders against SAP and the MES before anyone types them in. Read-only.
       harness: kagent
       systemMessage: |
@@ -33,7 +33,7 @@ spec:
         these exact names through call_tool; do not use filter_tools or describe_tool.
         Be precise, cite the evidence, keep each report under 200 words.
     modelConfig:
-      name: gemini-flash
+      name: haiku
     toolset:
       - preset:read-only
       - workflow:validate-dealer-order
