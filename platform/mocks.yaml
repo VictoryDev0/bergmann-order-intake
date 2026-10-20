@@ -21,7 +21,7 @@ spec:
           command: ["uv", "run", "--with", "fastmcp>=2.10,<3", "python", "/app/server.py"]
           env: [{name: SYSTEM, value: mailbox}, {name: DATA_DIR, value: /app/data}, {name: UV_CACHE_DIR, value: /tmp/uv}]
           ports: [{name: mcp, containerPort: 8000}]
-          resources: {requests: {cpu: 20m, memory: 96Mi}, limits: {memory: 256Mi}}
+          resources: {requests: {cpu: 5m, memory: 96Mi}, limits: {memory: 256Mi}}
           volumeMounts: [{name: code, mountPath: /app/server.py, subPath: server.py}, {name: data, mountPath: /app/data}]
       volumes:
         - {name: code, configMap: {name: bergmann-mock-code}}
@@ -47,7 +47,7 @@ spec:
           command: ["uv", "run", "--with", "fastmcp>=2.10,<3", "python", "/app/server.py"]
           env: [{name: SYSTEM, value: sap}, {name: DATA_DIR, value: /app/data}, {name: UV_CACHE_DIR, value: /tmp/uv}]
           ports: [{name: mcp, containerPort: 8000}]
-          resources: {requests: {cpu: 20m, memory: 96Mi}, limits: {memory: 256Mi}}
+          resources: {requests: {cpu: 5m, memory: 96Mi}, limits: {memory: 256Mi}}
           volumeMounts: [{name: code, mountPath: /app/server.py, subPath: server.py}, {name: data, mountPath: /app/data}]
       volumes:
         - {name: code, configMap: {name: bergmann-mock-code}}
@@ -73,7 +73,7 @@ spec:
           command: ["uv", "run", "--with", "fastmcp>=2.10,<3", "python", "/app/server.py"]
           env: [{name: SYSTEM, value: mes}, {name: DATA_DIR, value: /app/data}, {name: UV_CACHE_DIR, value: /tmp/uv}]
           ports: [{name: mcp, containerPort: 8000}]
-          resources: {requests: {cpu: 20m, memory: 96Mi}, limits: {memory: 256Mi}}
+          resources: {requests: {cpu: 5m, memory: 96Mi}, limits: {memory: 256Mi}}
           volumeMounts: [{name: code, mountPath: /app/server.py, subPath: server.py}, {name: data, mountPath: /app/data}]
       volumes:
         - {name: code, configMap: {name: bergmann-mock-code}}
