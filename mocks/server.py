@@ -295,5 +295,33 @@ elif SYSTEM == "mes":
 else:
     raise SystemExit(f"unknown SYSTEM {SYSTEM!r}; use mailbox, sap or mes")
 
+
+def _reset_state():
+    """Back to the morning of the demo: four new emails, no sales orders."""
+    if SYSTEM == "mailbox":
+        for e in INBOX:
+            STATE[e["email_id"]] = {"status": "new", "notes": []}
+    elif SYSTEM == "sap":
+        ORDERS.clear()
+        SEQ[0] = 4710
+
+
+# Plain HTTP, not an MCP tool: agents can't see it, scripts/demo.sh calls it from
+# inside the pod. Resetting in place keeps the pod (and muster's connection) up.
+from starlette.requests import Request  # noqa: E402
+from starlette.responses import JSONResponse  # noqa: E402
+
+
+@mcp.custom_route("/reset", methods=["POST"])
+async def reset(_: Request) -> JSONResponse:
+    _reset_state()
+    return JSONResponse({"ok": True, "system": SYSTEM})
+
+
+@mcp.custom_route("/healthz", methods=["GET"])
+async def healthz(_: Request) -> JSONResponse:
+    return JSONResponse({"ok": True, "system": SYSTEM})
+
+
 if __name__ == "__main__":
     mcp.run(transport="http", host="0.0.0.0", port=PORT, path="/mcp")

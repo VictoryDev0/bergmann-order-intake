@@ -17,6 +17,18 @@ kubectl -n bergmann rollout status deployment --timeout=180s
 
 echo "==> MCP servers registered with muster"
 kubectl apply -f platform/mcpservers.yaml
+# muster may have tried while uv was still installing FastMCP in the fresh pods;
+# ask it to reconnect and wait until all three report Connected
+for s in dealer-mailbox sap-erp mes-planning; do
+  kubectl -n agent-platform patch mcpserver.muster.giantswarm.io "$s" --type merge \
+    -p "{\"spec\":{\"restartRequestedAt\":\"$(date -u +%FT%TZ)\"}}" >/dev/null
+done
+for _ in $(seq 1 45); do
+  n=$(kubectl -n agent-platform get mcpserver.muster.giantswarm.io dealer-mailbox sap-erp mes-planning \
+      -o jsonpath='{range .items[*]}{.status.state}{"\n"}{end}' | grep -c '^Connected$' || true)
+  [[ "$n" == 3 ]] && break
+  sleep 2
+done
 echo "==> workflow"
 kubectl apply -f platform/workflow.yaml
 

@@ -36,3 +36,10 @@ Running notes of how this demo was built, including where AI assistance did the 
 - 04:35 Flux OCI sources suspended (agent-platform namespace and kagent/agent) so nothing floats before the demo. Helm renders still work from the stored artifacts; `agentlab platform` would need them unsuspended.
 - 04:50 Gemini direct route dropped (3.6 Flash answered 503 "high demand" twice; decision: OpenRouter only). Trial agent now `order-checker-haiku` (Haiku 5.5 via OpenRouter). Model spend for the whole night so far: $0.47 on OpenRouter for six Sonnet turns, i.e. roughly 8 cents per full inbox run.
 - 05:00 Haiku 5.5 trial turn: 15 s, verdicts right, but two of four orders skipped. Haiku for cheap test turns, Sonnet 5.5 for the demo (34 s, complete). Night total on OpenRouter: about $0.50.
+
+## 2026-10-21 (evening)
+
+- Screen recordings for the talk via Playwright on the lab host (one logged-in context, one page per clip, 1180 px wide so the UI reads on a slide). Dex rotates refresh tokens, so every fresh browser context after the first was logged out: record all clips in one context.
+- The live booker recording failed: "workflow validate-dealer-order is not available (missing required tools)". Cause: `demo.sh` restarted the mock pods seconds earlier and the agent's session started while muster still missed a server. Fix: the mocks got a plain-HTTP `POST /reset` (not an MCP tool, agents can't see it); `demo.sh` resets in place, then waits for `prove.sh` to pass before any agent starts. Reset plus proof: 3 s.
+- `deploy.sh` now nudges muster (`restartRequestedAt`) after a rollout and waits until all three servers report Connected.
+- The portal's "1 MCP server needs your sign-in" toast came from agentlab's own OAuth test fixture (`lab-oauth-fixture`). Removed it from the demo lab (backup in /root/lab/lab-oauth-fixture.backup.yaml); `agentlab platform-test` would flag its absence, `agentlab platform` recreates it.
