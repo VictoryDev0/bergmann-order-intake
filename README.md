@@ -41,7 +41,7 @@ flowchart LR
     WF[["workflow<br/>validate-dealer-order<br/>form, dealer, then per position:<br/>article, price, MES slot"]]
     subgraph RT["kagent on Agent Substrate (sandbox, egress gate)"]
       direction TB
-      CK["order-checker<br/>preset:read-only + workflow"]
+      CK["order-checker<br/>workflow + 3 named reads"]
       BK["order-booker<br/>sap-erp, dealer-mailbox, workflow<br/>requireApproval"]
     end
     SK[("skill dealer-order-intake<br/>git, pinned to a commit")]
@@ -71,7 +71,7 @@ Each agent is one HelmRelease of the Giant Swarm `agent` chart, delivered by Flu
 | Registration | `MCPServer` resources, tools appear as `x_sap-erp_*`, `x_dealer-mailbox_*`, `x_mes-planning_*` | `platform/mcpservers.yaml` |
 | Workflow | `validate-dealer-order`: form → dealer → per position: article, price, MES slot | `platform/workflow.yaml` |
 | Skill | the five checks, four verdicts, report format | `skills/dealer-order-intake/SKILL.md` |
-| Agents | two HelmReleases of the Giant Swarm `agent` chart, delivered by Flux | `platform/agents/` |
+| Agents | two HelmReleases of the Giant Swarm `agent` chart, delivered by Flux; the checker gets four named tools | `platform/agents/` |
 | Phase two | `home-returns-triage` skill (Induct 80 returns), not used in the demo | `skills/home-returns-triage/` |
 
 ## The four demo orders
@@ -118,13 +118,14 @@ agentlab turn --template order-checker "Check all new dealer order emails and wr
 agentlab turn --template order-booker --decide approve "Book order email E-2026-10-26-002 into SAP."
 ```
 
-`scripts/demo.sh` resets the inbox and starts the morning run; `scripts/tunnel.sh`
-opens the portal from another machine. Portal users: `admin@lab.local` / `password`.
+`scripts/demo.sh` resets the mocks in place (no pod restart), waits for `scripts/prove.sh`
+(12 checks) to pass and starts the morning run; `scripts/tunnel.sh` opens the portal from
+another machine. Portal users: `admin@lab.local` / `password`.
 
 ## What the platform does here that the mocks do not
 
 - **Identity on every call.** Every tool call carries the signed-in person's token; muster logs who called what.
-- **Toolsets only narrow.** `order-checker` declares `preset:read-only`; a call to `x_sap-erp_create_sales_order` is refused by muster, whatever the model decides.
+- **Toolsets only narrow.** `order-checker` declares four named tools (the workflow, two inbox reads, the KPI sheet). `preset:read-only` would have resolved to 66 tools, Kubernetes reads included. A call to `x_sap-erp_create_sales_order` or `x_kubernetes_list` is refused by muster, whatever the model decides.
 - **Approval.** `order-booker` runs with `muster.requireApproval: true`: each tool call pauses until a person approves it in the portal.
 - **Delivery by GitOps.** An agent is a HelmRelease; the skill is pinned to a git commit; Kyverno enforces the fleet's multi-tenancy policy.
 - **Egress.** Agents run in sandboxes that reach only their model, muster and the skill source. The order list cannot be posted anywhere else.

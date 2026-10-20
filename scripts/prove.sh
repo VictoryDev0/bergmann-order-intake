@@ -28,12 +28,15 @@ done
 # 3. muster as the admin: a session, the workflow, the toolset refusal
 agentlab login admin@lab.local >/dev/null 2>&1 || bad "agentlab login"
 T=$(cat .token)
+# the checker's own toolset, exactly as its HelmRelease declares it
+TS=$(kubectl -n kagent get helmrelease order-checker -o jsonpath='{.spec.values.toolset}' \
+     | python3 -c 'import sys,json; print(",".join(json.load(sys.stdin)))')
 hdr=(-H "Authorization: Bearer $T" -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream")
 init='{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"prove","version":"0"}}}'
-S=$(curl -sk -D - -o /dev/null "$M" "${hdr[@]}" -H "X-Muster-Toolset: preset:read-only,workflow:validate-dealer-order" -d "$init" | grep -i mcp-session-id | tr -d '\r' | cut -d' ' -f2)
-[[ -n "$S" ]] && ok "muster session as admin (toolset read-only + workflow)" || bad "no muster session"
+S=$(curl -sk -D - -o /dev/null "$M" "${hdr[@]}" -H "X-Muster-Toolset: $TS" -d "$init" | grep -i mcp-session-id | tr -d '\r' | cut -d' ' -f2)
+[[ -n "$S" ]] && ok "muster session as admin with the checker's toolset" || bad "no muster session"
 curl -sk "$M" "${hdr[@]}" -H "Mcp-Session-Id: $S" -d '{"jsonrpc":"2.0","method":"notifications/initialized"}' >/dev/null
-call() { curl -sk -m 120 "$M" "${hdr[@]}" -H "Mcp-Session-Id: $S" -H "X-Muster-Toolset: preset:read-only,workflow:validate-dealer-order" \
+call() { curl -sk -m 120 "$M" "${hdr[@]}" -H "Mcp-Session-Id: $S" -H "X-Muster-Toolset: $TS" \
   -d "{\"jsonrpc\":\"2.0\",\"id\":9,\"method\":\"tools/call\",\"params\":{\"name\":\"call_tool\",\"arguments\":{\"name\":\"$1\",\"arguments\":$2}}}" \
   | sed 's/^data: //' | grep '^{' | tail -1; }
 r=$(call workflow_validate-dealer-order '{"email_id":"E-2026-10-26-002"}')
