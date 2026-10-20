@@ -23,7 +23,8 @@ kubectl apply -f platform/workflow.yaml
 if [[ "${1:-}" == "--agents" ]]; then
   : "${GITHUB_OWNER:?export GITHUB_OWNER}" "${SKILLS_COMMIT:?export SKILLS_COMMIT (full 40-char sha)}"
   echo "==> agents (skills pinned to $SKILLS_COMMIT)"
-  for f in platform/agents/*.yaml; do
+  kubectl apply -f platform/agents/ocirepository.yaml
+  for f in platform/agents/order-*.yaml; do
     sed -e "s/GITHUB_OWNER/$GITHUB_OWNER/g" -e "s/SKILLS_COMMIT/$SKILLS_COMMIT/g" "$f" | kubectl apply -f -
   done
 fi

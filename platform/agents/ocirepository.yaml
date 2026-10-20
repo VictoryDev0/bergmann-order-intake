@@ -1,0 +1,11 @@
+# The Giant Swarm agent chart, tracked by Flux. Both agents render from it.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: agent
+  namespace: kagent
+spec:
+  interval: 10m
+  url: oci://gsoci.azurecr.io/charts/giantswarm/agent
+  ref:
+    semver: ">=2.0.0 <3.0.0"
