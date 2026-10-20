@@ -17,3 +17,5 @@ Running notes of how this demo was built, including where AI assistance did the 
 - 00:55 Mocks verified locally with a FastMCP client: readOnlyHint set on all reads, the four demo orders produce the intended findings (dealer-number mismatch, article typo resolved to BP-COMBI-10-G, 2025 price recognised, pack size 10, week 46 not feasible on line 2 → week 47).
 - 01:05 Written: platform/workflow.yaml (validate-dealer-order), mcpservers.yaml, mocks.yaml, scripts/deploy.sh, skills/dealer-order-intake, skills/home-returns-triage (phase two), agents order-checker (read-only) and order-booker (requireApproval).
 - 01:10 `agentlab up` at minute 5: observability installed, side-loading platform images. Memory 5.9 GB available, load 6 on 4 vCPU.
+- 01:20 Public repo github.com/VictoryDev0/bergmann-order-intake (skills must be fetchable by the agent's golden boot, pinned to a full commit). Commit identity fixed to the VictoryDev0 noreply address.
+- 01:40 Third model config: gemini-3.6-flash (provider Gemini) for cheap trial runs; Sonnet 5.5 stays the demo model. `agentlab platform` applies it after `up`.
