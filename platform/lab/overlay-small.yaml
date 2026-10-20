@@ -1,0 +1,6 @@
+# agentlab overlay for a 4 vCPU host (platform.valuesFiles in agentlab.yaml):
+# one Substrate worker fewer, so the platform's own requests leave room for
+# kube-state-metrics, Kyverno and the mocks. Two agents need nowhere near four workers.
+kagent:
+  substrateWorkerPool:
+    replicas: 3
