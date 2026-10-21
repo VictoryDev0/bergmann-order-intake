@@ -46,3 +46,11 @@ Running notes of how this demo was built, including where AI assistance did the 
 - The checker's `preset:read-only` resolved to 66 tools, Kubernetes reads included (visible on the agent's Tools tab). Replaced with four named selectors: the workflow, two inbox reads, the KPI sheet. The workflow still runs: muster executes its steps server-side with the person's catalogue. `prove.sh` now reads the checker's toolset from its HelmRelease and proves two refusals (create_sales_order, x_kubernetes_list) plus an allowed read: 12 checks.
 - Observed: the approval card labels the read-only workflow "Changes things" while the Workflows page shows it as "Reads". Fed into the talk's product questions.
 - Both agents re-pinned to commit e00ffc4. Full demo path (reset, proof, checker run) 32 s.
+
+## 2026-10-21 (practice run and after)
+
+- Practice run with Giant Swarm. Feedback: talk about the agentlab experience itself, one example instead of four, explain how approval is set up, build first and customer view second, and give my own view of the platform for this customer.
+- Tip from the practice run: route model calls through agentgateway, then the portal shows cost. The chart supports it (`llmRouting`): an `llm` listener on the data-plane Gateway, one AgentgatewayModel per provider, a price catalog and a MutatingAdmissionPolicy that points ModelConfigs without a baseUrl at the listener. My extraModels carried an explicit OpenRouter baseUrl, so the policy left them alone; I set both to the listener (`http://agentgateway.agent-platform.svc:8081/v1`). OpenRouter's model names are not in the gateway's built-in catalog, so I added their prices (`platform/lab/llm-routing.yaml`).
+- Result: every model call goes agent → Substrate egress → agentgateway `llm` listener → openrouter.ai, with tokens and `agw.ai.usage.cost.total` per call. Usage > Cost now shows spend per agent (checker test run: 3 calls, $0.116). Changing a ModelConfig recompiles the agents' golden snapshots (about 10 s each). `prove.sh` ALL PASS afterwards.
+- The Haiku trial agent still had `preset:read-only` (66 tools). Narrowed to the checker's four named tools.
+

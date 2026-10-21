@@ -34,9 +34,12 @@ spec:
         Be precise, cite the evidence, keep each report under 200 words.
     modelConfig:
       name: haiku
+    # Same four named tools as the checker (21.10.2026: was preset:read-only, 66 tools incl. Kubernetes reads)
     toolset:
-      - preset:read-only
       - workflow:validate-dealer-order
+      - tool:x_dealer-mailbox_list_order_emails
+      - tool:x_dealer-mailbox_get_order_form
+      - tool:x_sap-erp_get_otd_report
     muster:
       requireApproval: false
     skills:

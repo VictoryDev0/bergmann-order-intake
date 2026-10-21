@@ -1,0 +1,29 @@
+# Model calls through the platform's agentgateway (llmRouting), so the portal's Usage > Cost page
+# shows tokens and spend per agent. Tip from Giant Swarm's practice-run feedback, 21.10.2026.
+# Values for the agent-platform chart (add to agentlab.yaml platform.valuesFiles next to overlay-small.yaml).
+# In the lab it was applied to the agent-platform-connectivity HelmRelease directly; `agentlab platform` renders
+# the same from this file.
+llmRouting:
+  enabled: true
+  models:
+    - name: anthropic          # the chart default, kept
+      provider: Anthropic
+      baseURL: https://api.anthropic.com/v1
+      match: claude-*
+    - name: openrouter         # the lab's extraModels (OpenAI API format, OpenRouter upstream)
+      provider: OpenAI
+      baseURL: https://openrouter.ai/api/v1
+      match: anthropic/*
+  # The gateway's built-in catalog has no prices for OpenRouter's model names: USD per 1M tokens (OpenRouter, 21.10.2026)
+  modelCatalog:
+    enabled: true
+    providers:
+      openai:
+        models:
+          anthropic/claude-sonnet-5.5:
+            rates: {input: "2", output: "10", cacheRead: "0.1", cacheWrite: "2.5"}
+          anthropic/claude-haiku-5.5:
+            rates: {input: "0.1", output: "0.5", cacheRead: "0.01", cacheWrite: "0.125"}
+# The routing policy only fills in a MISSING baseUrl. The extraModels carry an explicit OpenRouter baseUrl, so in
+# agentlab.yaml set their baseUrl to the listener instead: http://agentgateway.agent-platform.svc:8081/v1
+# (the gateway holds no credential; the OpenRouter key in the ModelConfig passes through).

@@ -129,6 +129,7 @@ another machine. Portal users: `admin@lab.local` / `password`.
 - **Approval.** `order-booker` runs with `muster.requireApproval: true`: each tool call pauses until a person approves it in the portal.
 - **Delivery by GitOps.** An agent is a HelmRelease; the skill is pinned to a git commit; Kyverno enforces the fleet's multi-tenancy policy.
 - **Egress.** Agents run in sandboxes that reach only their model, muster and the skill source. The order list cannot be posted anywhere else.
+- **Cost.** Model calls go through the platform's agentgateway (`platform/lab/llm-routing.yaml`), so Usage > Cost shows tokens and spend per agent.
 
 ## Limitations, honestly
 
